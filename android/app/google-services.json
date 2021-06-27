@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "657673005201",
+    "project_id": "specswear-473d0",
+    "storage_bucket": "specswear-473d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657673005201:android:e4388409f096888a96b730",
+        "android_client_info": {
+          "package_name": "com.example.specswear_ecom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657673005201-oa782luf6i7nuqe3nnc32uk7ks0glje5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkzPxodr5wJE_ezEDoFS_yAGZ-FAUUTiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657673005201-oa782luf6i7nuqe3nnc32uk7ks0glje5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
