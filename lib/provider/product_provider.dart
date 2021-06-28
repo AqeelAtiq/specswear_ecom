@@ -53,10 +53,40 @@ class ProductProvider with ChangeNotifier {
     );
     //
     homeFeature = newList;
+    notifyListeners();
   }
 
   List<Product?> get getHomeFeatureDataList {
     return homeFeature;
+  }
+
+//
+//getting home archieve data here
+  List<Product?> homeArchieve = [];
+  Product? homeArchieveData;
+  //
+  Future<void> getHomeArchievedata() async {
+    List<Product?> newList = [];
+    QuerySnapshot homeArchieveSnapShot =
+        await FirebaseFirestore.instance.collection("homearchieve").get();
+
+    homeArchieveSnapShot.docs.forEach(
+      (element) {
+        homeArchieveData = Product(
+          image: element['image'],
+          name: element['name'],
+          price: element['price'].toDouble(),
+        );
+        newList.add(homeArchieveData);
+      },
+    );
+    //
+    homeArchieve = newList;
+    notifyListeners();
+  }
+
+  List<Product?> get getHomeArchieveDataList {
+    return homeArchieve;
   }
 
 //

@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
     productProvider!.getFeaturedata();
     productProvider!.getArchievedata();
     productProvider!.getHomeFeaturedata();
+    productProvider!.getHomeArchievedata();
 
 //
     return Scaffold(
@@ -142,6 +143,8 @@ class _HomePageState extends State<HomePage> {
 //Build New Archive Section
   Widget _buildNewArchieve() {
     List<Product?> archieveProduct = productProvider!.getArchieveDataList;
+    List<Product?> homeArchieveProduct =
+        productProvider!.getHomeArchieveDataList;
 
     return Column(
       children: [
@@ -180,58 +183,50 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
+          children: homeArchieveProduct.map((e) {
+            return Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctx) => DetailScreen(
-                                image: "${archieveProduct.elementAt(0)?.image}",
-                                name: "${archieveProduct.elementAt(0)?.name}",
-                                price: archieveProduct
-                                    .elementAt(0)
-                                    ?.price!
-                                    .toDouble()),
+                                image: "${e?.image}",
+                                name: "${e?.name}",
+                                price: e?.price!.toDouble()),
                           ),
                         );
                       },
                       child: SingleProduct(
-                        name: "${archieveProduct.elementAt(0)?.name}",
-                        price: archieveProduct.elementAt(0)?.price!.toDouble(),
-                        image: "${archieveProduct.elementAt(0)?.image}",
+                        name: "${e?.name}",
+                        price: e?.price!.toDouble(),
+                        image: "${e?.image}",
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => DetailScreen(
-                              image: "${archieveProduct.elementAt(1)?.image}",
-                              name: "${archieveProduct.elementAt(1)?.name}",
-                              price: archieveProduct
-                                  .elementAt(1)
-                                  ?.price!
-                                  .toDouble(),
-                            ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => DetailScreen(
+                            image: "${e?.image}",
+                            name: "${e?.name}",
+                            price: e?.price!.toDouble(),
                           ),
-                        );
-                      },
-                      child: SingleProduct(
-                          name: "${archieveProduct.elementAt(1)?.name}",
-                          price:
-                              archieveProduct.elementAt(1)?.price!.toDouble(),
-                          image: "${archieveProduct.elementAt(1)?.image}"),
-                    )
-                  ],
-                ),
-              ],
-            )
-          ],
+                        ),
+                      );
+                    },
+                    child: SingleProduct(
+                        name: "${e?.name}",
+                        price: e?.price!.toDouble(),
+                        image: "${e?.image}"),
+                  )
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
@@ -270,10 +265,50 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         Row(
-          children: homeFeatureProduct.map((e) => {Row(children: <Widget>[],)}).toList()??
-           
-          
-        ),
+            children: homeFeatureProduct.map((e) {
+          return Expanded(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => DetailScreen(
+                            image: "${e?.image}",
+                            name: "${e?.name}",
+                            price: e?.price!.toDouble(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: SingleProduct(
+                        name: "${e?.name}",
+                        price: e?.price!.toDouble(),
+                        image: "${e?.image}"),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => DetailScreen(
+                          image: "${e?.image}",
+                          name: "${e?.name}",
+                          price: e?.price!.toDouble(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SingleProduct(
+                      name: "${e?.name}",
+                      price: e?.price!.toDouble(),
+                      image: "${e?.image}"),
+                )
+              ],
+            ),
+          );
+        }).toList()),
       ],
     );
   }
