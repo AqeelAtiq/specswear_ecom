@@ -42,10 +42,14 @@ class _HomePageState extends State<HomePage> {
       maxRadius: 38,
       backgroundColor: Color(color),
       child: Container(
-          height: 50,
-          width: 50,
-          child: Text(
-            "$name",
+          height: 60,
+          width: 60,
+          child: Center(
+            child: Text("$name",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
           )),
     );
   }
@@ -63,6 +67,8 @@ class _HomePageState extends State<HomePage> {
     productProvider = Provider.of<ProductProvider>(context);
     productProvider!.getFeaturedata();
     productProvider!.getArchievedata();
+    productProvider!.getHomeFeaturedata();
+
 //
     return Scaffold(
       key: _key,
@@ -234,6 +240,7 @@ class _HomePageState extends State<HomePage> {
 // Build Featured Product section
   Widget _buildFeatured() {
     List<Product?> featureProduct = productProvider!.getFeatureDataList;
+    List<Product?> homeFeatureProduct = productProvider!.getHomeFeatureDataList;
 
     return Column(
       children: [
@@ -263,40 +270,9 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => DetailScreen(
-                        name: "${featureProduct.elementAt(0)?.name}",
-                        price: featureProduct.elementAt(0)?.price!.toDouble(),
-                        image: "${featureProduct.elementAt(0)?.image}"),
-                  ),
-                );
-              },
-              child: SingleProduct(
-                  name: "${featureProduct.elementAt(0)?.name}",
-                  price: featureProduct.elementAt(0)?.price!.toDouble(),
-                  image: "${featureProduct.elementAt(0)?.image}"),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => DetailScreen(
-                        name: "${featureProduct.elementAt(1)?.name}",
-                        price: featureProduct.elementAt(1)?.price!.toDouble(),
-                        image: "${featureProduct.elementAt(1)?.image}"),
-                  ),
-                );
-              },
-              child: SingleProduct(
-                  name: "${featureProduct.elementAt(1)?.name}",
-                  price: featureProduct.elementAt(1)?.price!.toDouble(),
-                  image: "${featureProduct.elementAt(1)?.image}"),
-            )
-          ],
+          children: homeFeatureProduct.map((e) => {Row(children: <Widget>[],)}).toList()??
+           
+          
         ),
       ],
     );

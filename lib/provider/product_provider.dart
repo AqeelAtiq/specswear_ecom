@@ -32,6 +32,34 @@ class ProductProvider with ChangeNotifier {
     return feature;
   }
 
+//getting home feature data
+  List<Product?> homeFeature = [];
+  Product? homeFeatureData;
+  //
+  Future<void> getHomeFeaturedata() async {
+    List<Product?> newList = [];
+    QuerySnapshot homeFeatureSnapShot =
+        await FirebaseFirestore.instance.collection("homefeature").get();
+
+    homeFeatureSnapShot.docs.forEach(
+      (element) {
+        homeFeatureData = Product(
+          image: element['image'],
+          name: element['name'],
+          price: element['price'].toDouble(),
+        );
+        newList.add(homeFeatureData);
+      },
+    );
+    //
+    homeFeature = newList;
+  }
+
+  List<Product?> get getHomeFeatureDataList {
+    return homeFeature;
+  }
+
+//
   //getting archive data
   List<Product?> archieve = [];
   Product? archieveData;
