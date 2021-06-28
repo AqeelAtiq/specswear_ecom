@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SingleProduct extends StatelessWidget {
   SingleProduct({required this.name, required this.price, required this.image});
   final String name;
-  final double price;
+  final double? price;
   final String image;
 
   @override

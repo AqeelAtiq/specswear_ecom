@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
-import 'package:specswear_ecom/screens/homepage.dart';
 
 class DetailScreen extends StatefulWidget {
   DetailScreen({required this.image, required this.name, required this.price});
   final String image;
   final String name;
-  final double price;
+  final double? price;
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -49,19 +48,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => HomePage(),
-              ),
-            );
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           IconButton(
             onPressed: () {},

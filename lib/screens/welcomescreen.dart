@@ -45,6 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     Container(
                       width: 270,
+                      // ignore: deprecated_member_use
                       child: RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

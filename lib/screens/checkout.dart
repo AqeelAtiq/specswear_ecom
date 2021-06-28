@@ -4,7 +4,7 @@ class CheckOut extends StatefulWidget {
   CheckOut({required this.name, required this.image, required this.price});
   final String name;
   final String image;
-  final double price;
+  final double? price;
 
   @override
   _CheckOutState createState() => _CheckOutState();
@@ -98,7 +98,7 @@ class _CheckOutState extends State<CheckOut> {
           style: mystyle,
         ),
         Text(
-          "Rs. ${endName}",
+          "Rs. $endName",
           style: mystyle,
         ),
       ],

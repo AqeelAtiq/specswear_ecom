@@ -1,20 +1,23 @@
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:specswear_ecom/model/product.dart';
 import 'package:specswear_ecom/provider/category_provider.dart';
+import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/detailscreen.dart';
 import 'package:specswear_ecom/screens/listproduct.dart';
 import 'package:specswear_ecom/widgets/singleproduct.dart';
-import 'package:carousel_pro/carousel_pro.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:specswear_ecom/model/product.dart';
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-CategoryProvider? provider;
+CategoryProvider? categoryProvider;
+ProductProvider? productProvider;
+
 Product? menData;
 Product? womenData;
 Product? archMenData;
@@ -26,11 +29,11 @@ class _HomePageState extends State<HomePage> {
   bool cartColor = false;
   bool aboutColor = false;
   bool contactusColor = false;
-  var featuredSnapShot;
-  var archieveSnapShot;
-  var menCat;
-  var womenCat;
-  var kidCat;
+  List<Product>? featuredSnapShot;
+  List<Product>? archieveSnapShot;
+  var menCatSnapShot;
+  var womenCatSnapShot;
+  var kidsCat;
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
@@ -49,8 +52,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<CategoryProvider>(context);
-    provider!.getMenData();
+    //getting data catagory wise with provider
+
+    categoryProvider = Provider.of<CategoryProvider>(context);
+    categoryProvider!.getMenData();
+    categoryProvider!.getWomenData();
+    categoryProvider!.getKidsData();
+//
+//getting data product wise with provider
+    productProvider = Provider.of<ProductProvider>(context);
+    productProvider!.getFeaturedata();
+    productProvider!.getArchievedata();
+//
     return Scaffold(
       key: _key,
       drawer: _buildMyDrawer(),
@@ -86,113 +99,44 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection("products")
-              .doc("npOtqxmDUdXcGsgxDgsN")
-              .collection("featureproduct")
-              .get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            featuredSnapShot = snapshot;
-            menData = Product(
-              image: snapshot.data!.docs[0]['image'],
-              name: snapshot.data!.docs[0]['name'],
-              price: snapshot.data!.docs[0]['price'].toDouble(),
-            );
-            womenData = Product(
-              image: snapshot.data!.docs[1]['image'],
-              name: snapshot.data!.docs[1]['name'],
-              price: snapshot.data!.docs[1]['price'].toDouble(),
-            );
-            print(snapshot.data!.docs[3]['name']);
-            // print(snapshot.data!.docs[0]['price'].toDouble());
-            //print(womenData?.price);
-            return FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection("category")
-                    .doc("y5NuMWFTeQiIkIHmRA9D")
-                    .collection("men")
-                    .get(),
-                builder: (context, menSnapShot) {
-                  if (menSnapShot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  // there is probelem with getting data solve it later video 15 13:00 min
-                  menCat = snapshot;
-                  print("printing at index 1");
-                  print(snapshot.data!.docs[0]['name']);
-
-                  return FutureBuilder(
-                      future: FirebaseFirestore.instance
-                          .collection("products")
-                          .doc("npOtqxmDUdXcGsgxDgsN")
-                          .collection("newarchieve")
-                          .get(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot?> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        archieveSnapShot = snapshot;
-                        archMenData = Product(
-                          image: snapshot.data!.docs[0]['image'],
-                          name: snapshot.data!.docs[0]['name'],
-                          price: snapshot.data!.docs[0]['price'].toDouble(),
-                        );
-                        archKidData = Product(
-                          image: snapshot.data!.docs[1]['image'],
-                          name: snapshot.data!.docs[1]['name'],
-                          price: snapshot.data!.docs[1]['price'].toDouble(),
-                        );
-                        return Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: ListView(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                // color: Colors.blue,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildImageSlider(),
-                                    //build Categiry
-                                    _buildCategory(),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        child: ListView(
+          children: [
+            Container(
+              width: double.infinity,
+              // color: Colors.blue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageSlider(),
+                  //build Categiry
+                  _buildCategory(),
 
 //
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    //Build Featured product
-                                    _buildFeatured(),
-                                    // New Archieve product
-                                    _buildNewArchieve(),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      });
-                });
-          }),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //continue from here after break
+                  //Build Featured product
+                  _buildFeatured(),
+                  // New Archieve product
+                  _buildNewArchieve(),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
 //Build New Archive Section
   Widget _buildNewArchieve() {
+    List<Product?> archieveProduct = productProvider!.getArchieveDataList;
+
     return Column(
       children: [
         Container(
@@ -209,11 +153,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (ctx) => ListProduct(
                             name: "New Archieve",
-                            snapShot: archieveSnapShot,
+                            snapShot: archieveProduct,
                           ),
                         ),
                       );
@@ -238,35 +182,44 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctx) => DetailScreen(
-                                image: "${archMenData?.image}",
-                                name: "${archMenData?.name}",
-                                price: archMenData!.price),
+                                image: "${archieveProduct.elementAt(0)?.image}",
+                                name: "${archieveProduct.elementAt(0)?.name}",
+                                price: archieveProduct
+                                    .elementAt(0)
+                                    ?.price!
+                                    .toDouble()),
                           ),
                         );
                       },
                       child: SingleProduct(
-                          name: "${archMenData?.name}",
-                          price: archMenData!.price,
-                          image: "${archMenData?.image}"),
+                        name: "${archieveProduct.elementAt(0)?.name}",
+                        price: archieveProduct.elementAt(0)?.price!.toDouble(),
+                        image: "${archieveProduct.elementAt(0)?.image}",
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctx) => DetailScreen(
-                                image: "${archKidData?.image}",
-                                name: "${archKidData?.name}",
-                                price: archKidData!.price),
+                              image: "${archieveProduct.elementAt(1)?.image}",
+                              name: "${archieveProduct.elementAt(1)?.name}",
+                              price: archieveProduct
+                                  .elementAt(1)
+                                  ?.price!
+                                  .toDouble(),
+                            ),
                           ),
                         );
                       },
                       child: SingleProduct(
-                          name: "${archKidData?.name}",
-                          price: archKidData!.price,
-                          image: "${archKidData?.image}"),
+                          name: "${archieveProduct.elementAt(1)?.name}",
+                          price:
+                              archieveProduct.elementAt(1)?.price!.toDouble(),
+                          image: "${archieveProduct.elementAt(1)?.image}"),
                     )
                   ],
                 ),
@@ -280,6 +233,8 @@ class _HomePageState extends State<HomePage> {
 
 // Build Featured Product section
   Widget _buildFeatured() {
+    List<Product?> featureProduct = productProvider!.getFeatureDataList;
+
     return Column(
       children: [
         Row(
@@ -291,11 +246,11 @@ class _HomePageState extends State<HomePage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (ctx) => ListProduct(
+                    builder: (BuildContext ctx) => ListProduct(
                       name: "Featured",
-                      snapShot: featuredSnapShot,
+                      snapShot: featureProduct,
                     ),
                   ),
                 );
@@ -311,35 +266,35 @@ class _HomePageState extends State<HomePage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (ctx) => DetailScreen(
-                        image: "${menData?.image}",
-                        name: "${menData?.name}",
-                        price: menData!.price),
+                        name: "${featureProduct.elementAt(0)?.name}",
+                        price: featureProduct.elementAt(0)?.price!.toDouble(),
+                        image: "${featureProduct.elementAt(0)?.image}"),
                   ),
                 );
               },
               child: SingleProduct(
-                  name: "${menData?.name}",
-                  price: menData!.price,
-                  image: "${menData?.image}"),
+                  name: "${featureProduct.elementAt(0)?.name}",
+                  price: featureProduct.elementAt(0)?.price!.toDouble(),
+                  image: "${featureProduct.elementAt(0)?.image}"),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (ctx) => DetailScreen(
-                        image: "${womenData?.image}",
-                        name: "${womenData?.name}",
-                        price: womenData!.price),
+                        name: "${featureProduct.elementAt(1)?.name}",
+                        price: featureProduct.elementAt(1)?.price!.toDouble(),
+                        image: "${featureProduct.elementAt(1)?.image}"),
                   ),
                 );
               },
               child: SingleProduct(
-                  name: "${womenData?.name}",
-                  price: womenData!.price,
-                  image: "${womenData?.image}"),
+                  name: "${featureProduct.elementAt(1)?.name}",
+                  price: featureProduct.elementAt(1)?.price!.toDouble(),
+                  image: "${featureProduct.elementAt(1)?.image}"),
             )
           ],
         ),
@@ -349,6 +304,10 @@ class _HomePageState extends State<HomePage> {
 
 //build Catory Section widget
   Widget _buildCategory() {
+    List<Product?> men = categoryProvider!.getMenDataList;
+    List<Product?> women = categoryProvider!.getWomenDataList;
+    List<Product?> kids = categoryProvider!.getKidsDataList;
+
     return Column(
       children: [
         Container(
@@ -372,11 +331,13 @@ class _HomePageState extends State<HomePage> {
               //set image size later
               GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => ListProduct(
                           name: 'Men',
-                          snapShot: menCat,
+                          //add mapping here
+
+                          snapShot: men,
                         ),
                       ),
                     );
@@ -384,11 +345,11 @@ class _HomePageState extends State<HomePage> {
                   child: _buildcategoryProduct(name: 'Men', color: 0xff33dcfd)),
               GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => ListProduct(
-                          name: 'Wonen',
-                          snapShot: menCat,
+                          name: 'Women',
+                          snapShot: women,
                         ),
                       ),
                     );
@@ -397,11 +358,11 @@ class _HomePageState extends State<HomePage> {
                       _buildcategoryProduct(name: 'Women', color: 0xfff38cdd)),
               GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => ListProduct(
                           name: 'Kids',
-                          snapShot: menCat,
+                          snapShot: kids,
                         ),
                       ),
                     );
