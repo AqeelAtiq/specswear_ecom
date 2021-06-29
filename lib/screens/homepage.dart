@@ -3,6 +3,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:specswear_ecom/model/categoryicon.dart';
 import 'package:specswear_ecom/model/product.dart';
 import 'package:specswear_ecom/provider/category_provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
-  Widget _buildcategoryProduct({required String name, required int color}) {
+  Widget _buildcategoryProduct({required String image, required int color}) {
     return CircleAvatar(
       maxRadius: 38,
       backgroundColor: Color(color),
@@ -45,11 +46,7 @@ class _HomePageState extends State<HomePage> {
           height: 60,
           width: 60,
           child: Center(
-            child: Text("$name",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                )),
+            child: Image(color: Colors.white, image: NetworkImage(image)),
           )),
     );
   }
@@ -62,6 +59,10 @@ class _HomePageState extends State<HomePage> {
     categoryProvider!.getMenData();
     categoryProvider!.getWomenData();
     categoryProvider!.getKidsData();
+    categoryProvider!.getMenIconData();
+    categoryProvider!.getWomenIconData();
+    categoryProvider!.getKidsIconData();
+
 //
 //getting data product wise with provider
     productProvider = Provider.of<ProductProvider>(context);
@@ -315,7 +316,6 @@ class _HomePageState extends State<HomePage> {
 
 //build Catory Section widget
   Widget _buildCategory() {
-    List<Product?> men = categoryProvider!.getMenDataList;
     List<Product?> women = categoryProvider!.getWomenDataList;
     List<Product?> kids = categoryProvider!.getKidsDataList;
 
@@ -340,51 +340,83 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             children: [
               //set image size later
-              GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) => ListProduct(
-                          name: 'Men',
-                          //add mapping here
-
-                          snapShot: men,
-                        ),
-                      ),
-                    );
-                  },
-                  child: _buildcategoryProduct(name: 'Men', color: 0xff33dcfd)),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) => ListProduct(
-                          name: 'Women',
-                          snapShot: women,
-                        ),
-                      ),
-                    );
-                  },
-                  child:
-                      _buildcategoryProduct(name: 'Women', color: 0xfff38cdd)),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) => ListProduct(
-                          name: 'Kids',
-                          snapShot: kids,
-                        ),
-                      ),
-                    );
-                  },
-                  child:
-                      _buildcategoryProduct(name: 'Kids', color: 0xff4ff2af)),
+              _buildMenIcon(),
+              _buildWomenIcon(),
+              _buildKidsIcon(),
             ],
           ),
         ),
       ],
     );
+  }
+//building women icon here
+
+  Widget _buildKidsIcon() {
+    List<CategoryIcon?> kidsIcon = categoryProvider!.getKidsIconDataList;
+    List<Product?> kids = categoryProvider!.getKidsDataList;
+    return Row(
+        children: kidsIcon.map((e) {
+      return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ListProduct(
+                  name: 'Kids',
+                  snapShot: kids,
+                ),
+              ),
+            );
+          },
+          child:
+              _buildcategoryProduct(image: '${e?.image}', color: 0xff4ff2af));
+    }).toList());
+  }
+//building women icon here
+
+  Widget _buildWomenIcon() {
+    List<CategoryIcon?> womenIcon = categoryProvider!.getWomenIconDataList;
+    List<Product?> women = categoryProvider!.getWomenDataList;
+    return Row(
+        children: womenIcon.map((e) {
+      return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ListProduct(
+                  name: 'Women',
+                  snapShot: women,
+                ),
+              ),
+            );
+          },
+          child:
+              _buildcategoryProduct(image: '${e?.image}', color: 0xfff38cdd));
+    }).toList());
+  }
+
+//building men icon here
+  Widget _buildMenIcon() {
+    List<CategoryIcon?> menIcon = categoryProvider!.getMenIconDataList;
+    List<Product?> men = categoryProvider!.getMenDataList;
+
+    return Row(
+        children: menIcon.map((e) {
+      return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ListProduct(
+                  name: 'Men',
+                  //add mapping here
+
+                  snapShot: men,
+                ),
+              ),
+            );
+          },
+          child:
+              _buildcategoryProduct(image: "${e?.image}", color: 0xff33dcfd));
+    }).toList());
   }
 
 //image slider
