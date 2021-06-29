@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (ctx) => ListProduct(
-                            name: "New Archieve",
+                            name: "New Arrival",
                             snapShot: archieveProduct,
                           ),
                         ),
