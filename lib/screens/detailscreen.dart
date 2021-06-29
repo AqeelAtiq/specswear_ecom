@@ -1,17 +1,28 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
+import 'package:specswear_ecom/widgets/mybutton.dart';
 
 class DetailScreen extends StatefulWidget {
-  DetailScreen({required this.image, required this.name, required this.price});
+  DetailScreen(
+      {required this.image,
+      required this.name,
+      required this.price,
+      this.quantity});
   final String image;
   final String name;
   final double? price;
+  final int? quantity;
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  ProductProvider? productProvider;
   int count = 1;
   final TextStyle mystyle = TextStyle(fontSize: 18);
 
@@ -39,6 +50,8 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    productProvider = Provider.of<ProductProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -117,23 +130,18 @@ class _DetailScreenState extends State<DetailScreen> {
       height: 60,
       width: double.infinity,
       // ignore: deprecated_member_use
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        color: Colors.pink,
+      child: MyButton(
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (ctx) => CartScreen(
-                  name: widget.name, image: widget.image, price: widget.price),
-            ),
+          productProvider!.getCartData(
+            image: widget.image,
+            name: widget.name,
+            price: widget.price,
+            quantity: count,
           );
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (ctx) => CartScreen()));
         },
-        child: Text(
-          "Checkout",
-          style: mystyle,
-        ),
+        name: "Check Out",
       ),
     );
   }

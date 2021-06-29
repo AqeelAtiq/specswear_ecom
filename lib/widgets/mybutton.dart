@@ -13,7 +13,7 @@ class MyButton extends StatelessWidget {
       child: RaisedButton(
         onPressed: onPressed,
         child: Text("$name"),
-        color: Colors.blueGrey,
+        color: Color(0xff746bc9),
       ),
     );
   }

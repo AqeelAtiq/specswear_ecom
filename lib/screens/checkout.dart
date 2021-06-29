@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:specswear_ecom/provider/product_provider.dart';
+import 'package:specswear_ecom/widgets/cartsingleproduct.dart';
 
 class CheckOut extends StatefulWidget {
-  CheckOut({required this.name, required this.image, required this.price});
-  final String name;
-  final String image;
-  final double? price;
-
   @override
   _CheckOutState createState() => _CheckOutState();
 }
 
 class _CheckOutState extends State<CheckOut> {
+  ProductProvider? productProvider;
   int count = 1;
 
   final TextStyle mystyle = TextStyle(fontSize: 18);
 
   @override
   Widget build(BuildContext context) {
+    productProvider = Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -60,28 +60,33 @@ class _CheckOutState extends State<CheckOut> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSingleProductCart(),
-                _buildSingleProductCart(),
-                Container(
-                  height: 150,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildBottomDetails(startName: 'Price', endName: '1500'),
-                      _buildBottomDetails(startName: 'Discount', endName: '3%'),
-                      _buildBottomDetails(
-                          startName: 'Shipping', endName: '100'),
-                      _buildBottomDetails(startName: 'Total', endName: '1600'),
-                    ],
-                  ),
-                )
-              ],
-            ),
+            ListView.builder(
+                itemCount: productProvider!.getCartModelListLength,
+                itemBuilder: (ctx, index) {
+                  return CartSingleProduct(
+                    image: productProvider!.getCartModelList[index]!.image,
+                    name: productProvider!.getCartModelList[index]!.name,
+                    price: productProvider!.getCartModelList[index]!.price!
+                        .toDouble(),
+                    quantity:
+                        productProvider!.getCartModelList[index]!.quantity,
+                  );
+                }),
+            Container(
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildBottomDetails(startName: 'Price', endName: '1500'),
+                  _buildBottomDetails(startName: 'Discount', endName: '3%'),
+                  _buildBottomDetails(startName: 'Shipping', endName: '100'),
+                  _buildBottomDetails(startName: 'Total', endName: '1600'),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -106,58 +111,4 @@ class _CheckOutState extends State<CheckOut> {
   }
 
 //building cart product
-  Widget _buildSingleProductCart() {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      child: Card(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 130,
-                width: 150,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("images/${widget.image}"),
-                  ),
-                ),
-              ),
-              Container(
-                height: 140,
-                width: 200,
-                child: ListTile(
-                  title: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${widget.name}"),
-                      Text("Kids"),
-                      Text(
-                        "Rs.${widget.price.toString()}",
-                        style: TextStyle(
-                            color: Color(0xff9b96d6),
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        height: 35,
-                        width: 100,
-                        //color: Color(0xfff2f2f2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Quantity"), Text("1")],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      )),
-    );
-  }
 }

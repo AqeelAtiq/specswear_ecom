@@ -46,7 +46,10 @@ class _HomePageState extends State<HomePage> {
           height: 60,
           width: 60,
           child: Center(
-            child: Image(color: Colors.white, image: NetworkImage(image)),
+            child: Image(
+              color: Colors.white,
+              image: NetworkImage(image),
+            ),
           )),
     );
   }

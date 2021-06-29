@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:specswear_ecom/model/cartmodel.dart';
 import 'package:specswear_ecom/model/product.dart';
 
 class ProductProvider with ChangeNotifier {
@@ -114,9 +115,32 @@ class ProductProvider with ChangeNotifier {
     );
     //
     archieve = newList;
+    notifyListeners();
   }
 
   List<Product?> get getArchieveDataList {
     return archieve;
+  }
+
+  //Playing with Cart
+  List<CartModel?> cartModelList = [];
+  CartModel? cartModel;
+  void getCartData(
+      {String? name, String? image, int? quantity, double? price}) {
+    cartModel = CartModel(
+      image: image,
+      name: name,
+      price: price,
+      quantity: quantity,
+    );
+    cartModelList.add(cartModel);
+  }
+
+  List<CartModel?> get getCartModelList {
+    return List.from(cartModelList);
+  }
+
+  int get getCartModelListLength {
+    return cartModelList.length;
   }
 }
