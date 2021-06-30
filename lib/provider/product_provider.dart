@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:specswear_ecom/model/cartmodel.dart';
+import 'package:specswear_ecom/model/checkmodel.dart';
 import 'package:specswear_ecom/model/product.dart';
 
 class ProductProvider with ChangeNotifier {
@@ -145,11 +146,11 @@ class ProductProvider with ChangeNotifier {
   }
 
   //Playing with Checkout model
-  List<CartModel?> checkOutModelList = [];
-  CartModel? checkOutModel;
+  List<CheckOutModel?> checkOutModelList = [];
+  CheckOutModel? checkOutModel;
   void getCheckOutData(
       {String? name, String? image, int? quantity, double? price}) {
-    checkOutModel = CartModel(
+    checkOutModel = CheckOutModel(
       image: image,
       name: name,
       price: price,
@@ -158,8 +159,8 @@ class ProductProvider with ChangeNotifier {
     checkOutModelList.add(checkOutModel);
   }
 
-  List<CartModel?> get getCheckOutModelList {
-    return List.from(checkOutModelList);
+  List<CheckOutModel?> get getCheckOutModelList {
+    return checkOutModelList;
   }
 
   int get getCheckOutModelListLength {

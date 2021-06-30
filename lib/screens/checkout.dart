@@ -22,9 +22,13 @@ class _CheckOutState extends State<CheckOut> {
     double shipping = 60;
     double total;
     productProvider = Provider.of<ProductProvider>(context);
-    productProvider!.getCheckOutModelList.forEach((element) {
+    productProvider!.getCartModelList.forEach((element) {
+      print(element?.price);
       subTotal += (element?.price ?? 0) * (element?.quantity ?? 0);
     });
+    print("hello");
+    print(productProvider!.getCheckOutModelList.length);
+
     discountRupess = discount / 100 * subTotal;
     total = subTotal + shipping - discountRupess;
     return Scaffold(
@@ -69,21 +73,16 @@ class _CheckOutState extends State<CheckOut> {
           children: [
             Expanded(
               child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: productProvider!.getCheckOutModelListLength,
-                  itemBuilder: (ctx, index) {
-                    return CartSingleProduct(
-                      image:
-                          productProvider!.getCheckOutModelList[index]!.image,
-                      name: productProvider!.getCheckOutModelList[index]!.name,
-                      price:
-                          productProvider!.getCheckOutModelList[index]!.price!,
-                      quantity: productProvider!
-                          .getCheckOutModelList[index]!.quantity,
-                      isCount: false,
-                    );
-                  }),
+                itemCount: productProvider!.getCartModelListLength,
+                itemBuilder: (ctx, index) => CartSingleProduct(
+                  image: productProvider!.getCartModelList[index]!.image,
+                  name: productProvider!.getCartModelList[index]!.name,
+                  price: productProvider!.getCartModelList[index]!.price!
+                      .toDouble(),
+                  quantity: productProvider!.getCartModelList[index]!.quantity,
+                  isCount: true,
+                ),
+              ),
             ),
             Container(
               height: 150,
