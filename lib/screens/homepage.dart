@@ -10,6 +10,7 @@ import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
 import 'package:specswear_ecom/screens/detailscreen.dart';
 import 'package:specswear_ecom/screens/listproduct.dart';
+import 'package:specswear_ecom/widgets/notification_button.dart';
 import 'package:specswear_ecom/widgets/singleproduct.dart';
 
 class HomePage extends StatefulWidget {
@@ -102,13 +103,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.send,
-              color: Colors.black,
-            ),
-          ),
+          NotificationButton(),
         ],
       ),
       body: Container(

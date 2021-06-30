@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
 import 'package:specswear_ecom/widgets/mybutton.dart';
+import 'package:specswear_ecom/widgets/notification_button.dart';
 
 class DetailScreen extends StatefulWidget {
   DetailScreen(
@@ -60,15 +61,7 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
-        ],
+        actions: [NotificationButton()],
       ),
       body: Container(
         child: ListView(

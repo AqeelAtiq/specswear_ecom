@@ -16,7 +16,17 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    double subTotal = 0.0;
+    double discount = 3;
+    double discountRupess;
+    double shipping = 60;
+    double total;
     productProvider = Provider.of<ProductProvider>(context);
+    productProvider!.getCheckOutModelList.forEach((element) {
+      subTotal += (element?.price ?? 0) * (element?.quantity ?? 0);
+    });
+    discountRupess = discount / 100 * subTotal;
+    total = subTotal + shipping - discountRupess;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,13 +36,7 @@ class _CheckOutState extends State<CheckOut> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           IconButton(
             onPressed: () {},
@@ -63,27 +67,41 @@ class _CheckOutState extends State<CheckOut> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListView.builder(
-                itemCount: productProvider!.getCartModelListLength,
-                itemBuilder: (ctx, index) {
-                  return CartSingleProduct(
-                    image: productProvider!.getCartModelList[index]!.image,
-                    name: productProvider!.getCartModelList[index]!.name,
-                    price: productProvider!.getCartModelList[index]!.price!
-                        .toDouble(),
-                    quantity:
-                        productProvider!.getCartModelList[index]!.quantity,
-                  );
-                }),
+            Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: productProvider!.getCheckOutModelListLength,
+                  itemBuilder: (ctx, index) {
+                    return CartSingleProduct(
+                      image:
+                          productProvider!.getCheckOutModelList[index]!.image,
+                      name: productProvider!.getCheckOutModelList[index]!.name,
+                      price:
+                          productProvider!.getCheckOutModelList[index]!.price!,
+                      quantity: productProvider!
+                          .getCheckOutModelList[index]!.quantity,
+                      isCount: false,
+                    );
+                  }),
+            ),
             Container(
               height: 150,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildBottomDetails(startName: 'Price', endName: '1500'),
-                  _buildBottomDetails(startName: 'Discount', endName: '3%'),
-                  _buildBottomDetails(startName: 'Shipping', endName: '100'),
-                  _buildBottomDetails(startName: 'Total', endName: '1600'),
+                  _buildBottomDetails(
+                      startName: 'Price',
+                      endName: '${subTotal.toStringAsFixed(2)}'),
+                  _buildBottomDetails(
+                      startName: 'Discount',
+                      endName: '${discount.toStringAsFixed(2)}%'),
+                  _buildBottomDetails(
+                      startName: 'Shipping',
+                      endName: '${shipping.toStringAsFixed(2)}'),
+                  _buildBottomDetails(
+                      startName: 'Total',
+                      endName: '${total.toStringAsFixed(2)}'),
                 ],
               ),
             )

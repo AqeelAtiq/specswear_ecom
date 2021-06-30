@@ -143,4 +143,37 @@ class ProductProvider with ChangeNotifier {
   int get getCartModelListLength {
     return cartModelList.length;
   }
+
+  //Playing with Checkout model
+  List<CartModel?> checkOutModelList = [];
+  CartModel? checkOutModel;
+  void getCheckOutData(
+      {String? name, String? image, int? quantity, double? price}) {
+    checkOutModel = CartModel(
+      image: image,
+      name: name,
+      price: price,
+      quantity: quantity,
+    );
+    checkOutModelList.add(checkOutModel);
+  }
+
+  List<CartModel?> get getCheckOutModelList {
+    return List.from(checkOutModelList);
+  }
+
+  int get getCheckOutModelListLength {
+    return checkOutModelList.length;
+  }
+
+  //
+//notification
+  List<String> notificationList = [];
+  void addnotification(String notification) {
+    notificationList.add(notification);
+  }
+
+  int get getNotificationIndex {
+    return notificationList.length;
+  }
 }
