@@ -7,6 +7,7 @@ import 'package:specswear_ecom/model/categoryicon.dart';
 import 'package:specswear_ecom/model/product.dart';
 import 'package:specswear_ecom/provider/category_provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
+import 'package:specswear_ecom/screens/cartscreen.dart';
 import 'package:specswear_ecom/screens/detailscreen.dart';
 import 'package:specswear_ecom/screens/listproduct.dart';
 import 'package:specswear_ecom/widgets/singleproduct.dart';
@@ -487,6 +488,8 @@ class _HomePageState extends State<HomePage> {
                 aboutColor = false;
                 contactusColor = false;
               });
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => CartScreen()));
             },
           ),
           ListTile(

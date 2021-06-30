@@ -23,13 +23,7 @@ class _CartScreenState extends State<CartScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           IconButton(
             onPressed: () {},
