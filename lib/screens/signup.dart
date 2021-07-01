@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:specswear_ecom/screens/login.dart';
@@ -21,7 +22,7 @@ String p =
 RegExp regExp = new RegExp(p);
 
 class _SignUpState extends State<SignUp> {
-  String? email;
+  String? email, userName;
   String? password;
   bool obserText = true;
   void validation() async {
@@ -32,6 +33,14 @@ class _SignUpState extends State<SignUp> {
       try {
         final result = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email!, password: password!);
+        FirebaseFirestore.instance
+            .collection("User")
+            .doc(result.user?.uid)
+            .set({
+          "UserName": userName,
+          "UserId": result.user?.uid,
+          "UserEmail": email,
+        });
         print(result.user?.uid);
       } on PlatformException catch (e) {
         print(e.message.toString());
@@ -65,7 +74,9 @@ class _SignUpState extends State<SignUp> {
               }
               return '';
             },
-            onChange: (value) {},
+            onChange: (value) {
+              userName = value;
+            },
           ),
           //Email
           MyTextFormField(
@@ -109,6 +120,12 @@ class _SignUpState extends State<SignUp> {
                 });
               },
               obserText: obserText),
+          //gender
+          Container(
+            height: 60,
+            width: double.infinity,
+            color: Colors.blue,
+          ),
           // Phone Number field
           MyTextFormField(
             name: "Phone Number",
