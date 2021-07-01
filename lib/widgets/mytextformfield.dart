@@ -4,17 +4,14 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 class MyTextFormField extends StatelessWidget {
-  MyTextFormField(
-      {required this.name, required this.validator, required this.onChange});
+  MyTextFormField({required this.name, required this.controller});
   final String name;
-  final String Function(String?) validator;
-  final Function(String?) onChange;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: validator,
-      onChanged: onChange,
+      controller: controller,
       decoration: InputDecoration(
           hintText: name,
           border: OutlineInputBorder(),

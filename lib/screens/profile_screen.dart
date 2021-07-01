@@ -1,18 +1,88 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:specswear_ecom/model/usermodel.dart';
+import 'package:specswear_ecom/provider/product_provider.dart';
+import 'package:specswear_ecom/screens/homepage.dart';
 import 'package:specswear_ecom/widgets/mybutton.dart';
 import 'package:specswear_ecom/widgets/notification_button.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+ProductProvider? productProvider;
+
 class _ProfileScreenState extends State<ProfileScreen> {
+  // final _picker = ImagePicker();
+  // Future<void> getImage({required ImageSource source}) async {
+  //   PickedFile? image = await _picker.getImage(source: source);
+  //   final File file = File(image!.path);
+  // }
+  File? _pickedImage;
+  PickedFile? _image;
+  Future<void> getImage({required ImageSource source}) async {
+    _image = await ImagePicker().getImage(source: source);
+    setState(() {
+      if (_image != null) {
+        _pickedImage = File(_image!.path);
+      }
+    });
+  }
+
+  void _uploadImage({required File image}) async {
+    final user = FirebaseAuth.instance.currentUser;
+    Reference storageReference =
+        FirebaseStorage.instance.ref().child("UserImage/${user?.uid}");
+    await FirebaseStorage.instance
+        .ref('uploads/file-to-upload.png')
+        .putFile(image);
+    // UploadTask uploadTask = storageReference.putFile(image);
+    // TaskSnapshot snapshot = await uploadTask.onComplete;
+  }
+
+  Future<void> myDialogBox() {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.camera),
+                    title: Text("Pick from camera"),
+                    onTap: () {
+                      getImage(source: ImageSource.camera);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.photo_library),
+                    title: Text("Pick from gallery"),
+                    onTap: () {
+                      getImage(source: ImageSource.gallery);
+                    },
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   bool edit = false;
 
   @override
   Widget build(BuildContext context) {
+    productProvider = Provider.of<ProductProvider>(context);
+    productProvider!.getUserdata();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: edit == true
             ? IconButton(
@@ -26,7 +96,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: Colors.redAccent,
                 ),
               )
-            : Container(),
+            : IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => HomePage(),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+              ),
         backgroundColor: Colors.white,
         actions: [
           edit == false
@@ -68,11 +150,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.black,
+                          child: GestureDetector(
+                            onTap: () {
+                              myDialogBox();
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
@@ -89,35 +176,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   edit == true
                       ? Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildSingleTextField(name: 'Aqeel'),
-                              _buildSingleTextField(
-                                  name: 'aqeelatiq.arain@gmail.com'),
-                              _buildSingleTextField(name: '03111234567'),
-                              _buildSingleTextField(name: 'Male'),
-                            ],
-                          ),
+                          height: 250,
+                          child: _buildTextFormFieldPart(),
                         )
                       : Container(
                           height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildSingleContainer(
-                                  startText: 'Name', endText: 'Aqeel Atiq'),
-                              _buildSingleContainer(
-                                  startText: 'Email',
-                                  endText: 'aqeelatiq.arain@gmail.com'),
-                              _buildSingleContainer(
-                                  startText: 'Phone No.',
-                                  endText: '03111234567'),
-                              _buildSingleContainer(
-                                  startText: 'Gender', endText: 'Male')
-                            ],
-                          ),
+                          child: _buildSingleContainerPart(),
                         )
                 ],
               ),
@@ -135,6 +199,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFormFieldPart() {
+    List<UserModel?> userModel = productProvider!.getUserModelList;
+
+    return Column(
+      children: userModel.map((e) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildSingleTextField(name: '${e?.userName}'),
+            _buildSingleTextField(name: '${e?.userEmail}'),
+            _buildSingleTextField(name: '${e?.userPhoneNumber}'),
+            _buildSingleTextField(name: '${e?.userGender}'),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSingleContainerPart() {
+    List<UserModel?> userModel = productProvider!.getUserModelList;
+
+    return Column(
+      children: userModel.map((e) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildSingleContainer(startText: 'Name', endText: '${e?.userName}'),
+            _buildSingleContainer(
+                startText: 'Email', endText: '${e?.userEmail}'),
+            _buildSingleContainer(
+                startText: 'Phone No.', endText: '${e?.userPhoneNumber}'),
+            _buildSingleContainer(
+                startText: 'Gender', endText: '${e?.userGender}')
+          ],
+        );
+      }).toList(),
     );
   }
 

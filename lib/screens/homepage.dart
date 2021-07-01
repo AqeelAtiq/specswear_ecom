@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:specswear_ecom/model/categoryicon.dart';
 import 'package:specswear_ecom/model/product.dart';
+import 'package:specswear_ecom/model/usermodel.dart';
 import 'package:specswear_ecom/provider/category_provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
+import 'package:specswear_ecom/screens/contactus.dart';
 import 'package:specswear_ecom/screens/detailscreen.dart';
 import 'package:specswear_ecom/screens/listproduct.dart';
+import 'package:specswear_ecom/screens/login.dart';
+import 'package:specswear_ecom/screens/profile_screen.dart';
 import 'package:specswear_ecom/widgets/notification_button.dart';
 import 'package:specswear_ecom/widgets/singleproduct.dart';
 
@@ -32,6 +36,8 @@ class _HomePageState extends State<HomePage> {
   bool cartColor = false;
   bool aboutColor = false;
   bool contactusColor = false;
+  bool profileColor = false;
+
   List<Product>? featuredSnapShot;
   List<Product>? archieveSnapShot;
   var menCatSnapShot;
@@ -75,6 +81,9 @@ class _HomePageState extends State<HomePage> {
     productProvider!.getArchievedata();
     productProvider!.getHomeFeaturedata();
     productProvider!.getHomeArchievedata();
+    productProvider!.getUserdata();
+    // print(productProvider!.getUserdata());
+    // print(productProvider!.getUserModel?.userEmail);
 
 //
     return Scaffold(
@@ -442,23 +451,12 @@ class _HomePageState extends State<HomePage> {
 
 // menu or drawer
   Widget _buildMyDrawer() {
+    // print(productProvider!.getUserModel);
+
     return Drawer(
       child: ListView(
         children: [
-          UserAccountsDrawerHeader(
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("images/k1.webp"),
-            ),
-            accountName: Text(
-              "Aqeel Atiq",
-              style: TextStyle(color: Colors.black),
-            ),
-            accountEmail: Text(
-              "aqeelatiq.arain@gmail.com",
-              style: TextStyle(color: Colors.black),
-            ),
-            decoration: BoxDecoration(color: Color(0xfff2f2f2)),
-          ),
+          _buildUserAccountDrawerHeader(),
           ListTile(
             selected: homeColor,
             leading: Icon(Icons.home),
@@ -488,6 +486,23 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           ListTile(
+            selected: profileColor,
+            leading: Icon(Icons.phone),
+            title: Text("Profile"),
+            onTap: () {
+              setState(() {
+                homeColor = false;
+                cartColor = false;
+                aboutColor = false;
+                contactusColor = false;
+                profileColor = true;
+              });
+
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => ProfileScreen()));
+            },
+          ),
+          ListTile(
             selected: aboutColor,
             leading: Icon(Icons.info),
             title: Text("About"),
@@ -511,17 +526,46 @@ class _HomePageState extends State<HomePage> {
                 aboutColor = false;
                 contactusColor = true;
               });
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => Contact()),
+              );
             },
           ),
           ListTile(
             onTap: () {
               FirebaseAuth.instance.signOut();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => Login()),
+              );
             },
             leading: Icon(Icons.logout),
             title: Text("Log Out"),
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildUserAccountDrawerHeader() {
+    List<UserModel?> userModel = productProvider!.getUserModelList;
+    return Column(
+      children: userModel.map((e) {
+        return UserAccountsDrawerHeader(
+          currentAccountPicture: CircleAvatar(
+            backgroundImage: AssetImage("images/k1.webp"),
+          ),
+          accountName: Text(
+            //sending  null data check later
+            "${e?.userName}",
+            style: TextStyle(color: Colors.black),
+          ),
+          accountEmail: Text(
+            "${e?.userEmail}",
+            style: TextStyle(color: Colors.black),
+          ),
+          decoration: BoxDecoration(color: Color(0xfff2f2f2)),
+        );
+      }).toList(),
     );
   }
 }

@@ -20,26 +20,55 @@ String p =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
 RegExp regExp = new RegExp(p);
+// String? email, userName, phoneNumber;
+// String? password;
+bool isMale = true;
+bool obserText = true;
+final TextEditingController email = TextEditingController();
+final TextEditingController phoneNumber = TextEditingController();
+final TextEditingController password = TextEditingController();
+final TextEditingController userName = TextEditingController();
 
 class _SignUpState extends State<SignUp> {
-  String? email, userName;
-  String? password;
-  bool obserText = true;
   void validation() async {
-    final FormState _form = _formKey.currentState!;
-    if (!_form.validate()) {
-      print('enter try block');
-
+    if (userName.text.isEmpty &&
+        email.text.isEmpty &&
+        password.text.isEmpty &&
+        phoneNumber.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("All fields are empty")));
+    } else if (userName.text.length < 7) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Name must be 6")));
+    } else if (email.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email is empty")));
+    } else if (!regExp.hasMatch(email.text)) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Enter a valid email")));
+    } else if (password.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("password is empty")));
+    } else if (password.text.length < 8) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("password is too short")));
+    } else if (phoneNumber.text.length < 11) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("phone number must be 11")));
+    } else {
       try {
         final result = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email!, password: password!);
+            .createUserWithEmailAndPassword(
+                email: email.text, password: password.text);
         FirebaseFirestore.instance
             .collection("User")
             .doc(result.user?.uid)
             .set({
-          "UserName": userName,
+          "UserName": userName.text,
           "UserId": result.user?.uid,
-          "UserEmail": email,
+          "UserEmail": email.text,
+          "UserGender": isMale == true ? 'Male' : false,
+          "PhoneNumber": phoneNumber.text,
         });
         print(result.user?.uid);
       } on PlatformException catch (e) {
@@ -52,92 +81,102 @@ class _SignUpState extends State<SignUp> {
         );
       }
       print('yes');
-    } else {
-      print('No');
     }
   }
 
+  // void validation() async {
+  //   final FormState _form = _formKey.currentState!;
+  //   if (!_form.validate()) {
+  //     print('enter try block');
+
+  //     try {
+  //       final result = await FirebaseAuth.instance
+  //           .createUserWithEmailAndPassword(email: email!, password: password!);
+  //       FirebaseFirestore.instance
+  //           .collection("User")
+  //           .doc(result.user?.uid)
+  //           .set({
+  //         "UserName": userName,
+  //         "UserId": result.user?.uid,
+  //         "UserEmail": email,
+  //         "UserGender": isMale == true ? 'Male' : false,
+  //         "PhoneNumber": phoneNumber,
+  //       });
+  //       print(result.user?.uid);
+  //     } on PlatformException catch (e) {
+  //       print(e.message.toString());
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(e.message!),
+  //           duration: Duration(seconds: 3),
+  //         ),
+  //       );
+  //     }
+  //     print('yes');
+  //   } else {
+  //     print('No');
+  //   }
+  // }
+
   Widget _buildAllTextFormField() {
     return Container(
-      height: 340,
+      height: 420,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
 //UserName
           MyTextFormField(
             name: 'User Name',
-            validator: (value) {
-              if (value == '') {
-                return "Please enter your Username";
-              } else if (value!.length < 6) {
-                return 'Username is too short';
-              }
-              return '';
-            },
-            onChange: (value) {
-              userName = value;
-            },
+            controller: userName,
           ),
           //Email
           MyTextFormField(
             name: "Enter your Email",
-            validator: (value) {
-              if (value == '') {
-                return "Please enter your Email";
-              } else if (!regExp.hasMatch(value!)) {
-                return 'Email is invalid';
-              }
-              return '';
-            },
-            onChange: (value) {
-              setState(() {
-                email = value;
-                print(email);
-              });
-            },
+            controller: email,
           ),
           //password
           PasswordTextFormField(
               name: "Enter your Password",
+              controller: password,
               onTap: () {
                 setState(() {
                   obserText = !obserText;
                 });
                 Focus.of(context).unfocus();
               },
-              validator: (value) {
-                if (value == '') {
-                  return "Please enter your Password";
-                } else if (value!.length < 8) {
-                  return 'Password is too short';
-                }
-                return '';
-              },
-              onChange: (value) {
-                setState(() {
-                  password = value;
-                  print(password);
-                });
-              },
               obserText: obserText),
           //gender
-          Container(
-            height: 60,
-            width: double.infinity,
-            color: Colors.blue,
+          GestureDetector(
+            onTap: () {
+              print("tapped is ");
+              print(isMale);
+              setState(() {
+                isMale = !isMale;
+              });
+            },
+            child: Container(
+              height: 60,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+              child: Center(
+                child: Row(
+                  children: [
+                    Text(
+                      isMale ? "Male" : "Female",
+                      style: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           // Phone Number field
           MyTextFormField(
             name: "Phone Number",
-            validator: (value) {
-              if (value == '') {
-                return "Please enter your Phone Number";
-              } else if (value!.length < 11) {
-                return 'Enter Valid Phone Number';
-              }
-              return '';
-            },
-            onChange: (value) {},
+            controller: phoneNumber,
           ),
         ],
       ),
@@ -147,7 +186,7 @@ class _SignUpState extends State<SignUp> {
   Widget _buildBottomPart() {
     return Container(
       //color: Colors.blue,
-      height: 408,
+      height: 500,
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -183,34 +222,38 @@ class _SignUpState extends State<SignUp> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  // color: Colors.blue,
-                  height: 220,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Register',
-                        style: TextStyle(
-                            fontSize: 50, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
+        child: ListView(
+          children: [
+            Form(
+              key: _formKey,
+              child: Container(
+                child: Column(
+                  children: [
+                    Container(
+                      // color: Colors.blue,
+                      height: 120,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Register',
+                            style: TextStyle(
+                                fontSize: 50, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 0,
+                    ),
+                    //bottom
+                    _buildBottomPart(),
+                  ],
                 ),
-                SizedBox(
-                  height: 0,
-                ),
-                //bottom
-                _buildBottomPart(),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

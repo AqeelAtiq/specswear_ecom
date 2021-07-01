@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:specswear_ecom/model/cartmodel.dart';
 import 'package:specswear_ecom/model/checkmodel.dart';
 import 'package:specswear_ecom/model/product.dart';
+import 'package:specswear_ecom/model/usermodel.dart';
 
 class ProductProvider with ChangeNotifier {
   List<Product?> feature = [];
@@ -176,5 +178,38 @@ class ProductProvider with ChangeNotifier {
 
   int get getNotificationIndex {
     return notificationList.length;
+  }
+
+  //getting user data
+  List<UserModel?> userModelList = [];
+
+  UserModel? userModel;
+
+  Future<void> getUserdata() async {
+    List<UserModel?> newList = [];
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    QuerySnapshot userSnapShot =
+        await FirebaseFirestore.instance.collection("User").get();
+
+    userSnapShot.docs.forEach(
+      (element) {
+        if (currentUser!.uid == element['UserId']) {
+          print("we have current user");
+          userModel = UserModel(
+              userEmail: element['UserEmail'],
+              userGender: element['UserGender'],
+              userName: element['UserName'],
+              userPhoneNumber: element['PhoneNumber']);
+          print(userModel?.userEmail);
+          newList.add(userModel);
+        }
+        userModelList = newList;
+      },
+    );
+  }
+
+  List<UserModel?> get getUserModelList {
+    return userModelList;
   }
 }
