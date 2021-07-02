@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class CheckOutModel {
   final String? name;
   final String? image;

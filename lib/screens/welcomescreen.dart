@@ -31,6 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               Container(
+                // color: Colors.blue,
                 width: 260,
                 height: 200,
                 child: Column(

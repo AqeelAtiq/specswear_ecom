@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:specswear_ecom/provider/category_provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/homepage.dart';
-import 'package:specswear_ecom/screens/profile_screen.dart';
-import 'package:specswear_ecom/screens/signup.dart';
 import 'package:specswear_ecom/screens/welcomescreen.dart';
 
 void main() async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 
+// ignore: must_be_immutable
 class CartSingleProduct extends StatefulWidget {
   final String? image;
   final String? name;
@@ -145,6 +146,5 @@ class _CartSingleProductState extends State<CartSingleProduct> {
         ],
       )),
     );
-    ;
   }
 }

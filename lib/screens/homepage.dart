@@ -529,9 +529,9 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             onTap: () {
               FirebaseAuth.instance.signOut();
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder: (ctx) => Login()),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => Login()),
+              );
             },
             leading: Icon(Icons.logout),
             title: Text("Log Out"),

@@ -89,40 +89,6 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  // void validation() async {
-  //   final FormState _form = _formKey.currentState!;
-  //   if (!_form.validate()) {
-  //     print('enter try block');
-
-  //     try {
-  //       final result = await FirebaseAuth.instance
-  //           .createUserWithEmailAndPassword(email: email!, password: password!);
-  //       FirebaseFirestore.instance
-  //           .collection("User")
-  //           .doc(result.user?.uid)
-  //           .set({
-  //         "UserName": userName,
-  //         "UserId": result.user?.uid,
-  //         "UserEmail": email,
-  //         "UserGender": isMale == true ? 'Male' : false,
-  //         "PhoneNumber": phoneNumber,
-  //       });
-  //       print(result.user?.uid);
-  //     } on PlatformException catch (e) {
-  //       print(e.message.toString());
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text(e.message!),
-  //           duration: Duration(seconds: 3),
-  //         ),
-  //       );
-  //     }
-  //     print('yes');
-  //   } else {
-  //     print('No');
-  //   }
-  // }
-
   Widget _buildAllTextFormField() {
     return Container(
       height: 420,
