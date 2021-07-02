@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:specswear_ecom/model/cartmodel.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/widgets/cartsingleproduct.dart';
+import 'package:specswear_ecom/widgets/mybutton.dart';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -31,6 +35,56 @@ class _CheckOutState extends State<CheckOut> {
 
     discountRupess = discount / 100 * subTotal;
     total = subTotal + shipping - discountRupess;
+    //
+    List<CartModel> myList;
+    Widget _buildButton() {
+      final user = FirebaseAuth.instance.currentUser;
+      return Column(
+          children: productProvider!.userModelList.map((e) {
+        return Container(
+          height: 50,
+          child: MyButton(
+            name: "Buy",
+            onPressed: () {
+              if (productProvider!.getCartModelList.isNotEmpty) {
+                FirebaseFirestore.instance.collection("Order").add({
+                  "Product": productProvider!.getCartModelList
+                      .map((c) => {
+                            "ProductName": c!.name,
+                            "ProductPrice": c.price,
+                            "ProductQuetity": c.quantity,
+                            "ProductImage": c.image,
+                          })
+                      .toList(),
+                  "TotalPrice": total.toStringAsFixed(2),
+                  "UserName": e!.userName,
+                  "UserEmail": e.userEmail,
+                  "UserNumber": e.userPhoneNumber,
+                  "UserAddress": e.userAddress,
+                  "UserId": user!.uid,
+                });
+                setState(() {
+                  // myList.clear();
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Your order is placed successfully"),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("No Item Yet"),
+                  ),
+                );
+              }
+            },
+          ),
+        );
+      }).toList());
+    }
+
+    //
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -41,15 +95,15 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(
+        //       Icons.notifications_none,
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        // ],
       ),
       bottomNavigationBar: Container(
         width: 100,
@@ -57,14 +111,7 @@ class _CheckOutState extends State<CheckOut> {
         margin: EdgeInsets.symmetric(horizontal: 10),
         padding: EdgeInsets.only(bottom: 10),
         // ignore: deprecated_member_use
-        child: RaisedButton(
-          color: Color(0xff746bc9),
-          child: Text(
-            "Buy",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          onPressed: () {},
-        ),
+        child: _buildButton(),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -73,16 +120,20 @@ class _CheckOutState extends State<CheckOut> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: productProvider!.getCartModelListLength,
-                itemBuilder: (ctx, index) => CartSingleProduct(
-                  image: productProvider!.getCartModelList[index]!.image,
-                  name: productProvider!.getCartModelList[index]!.name,
-                  price: productProvider!.getCartModelList[index]!.price!
-                      .toDouble(),
-                  quantity: productProvider!.getCartModelList[index]!.quantity,
-                  isCount: true,
-                ),
-              ),
+                  itemCount: productProvider!.getCartModelListLength,
+                  itemBuilder: (ctx, index) {
+                    // print("this is length");
+                    // print(productProvider!.getCartModelListLength);
+                    return CartSingleProduct(
+                      image: productProvider!.getCartModelList[index]!.image,
+                      name: productProvider!.getCartModelList[index]!.name,
+                      price: productProvider!.getCartModelList[index]!.price!
+                          .toDouble(),
+                      quantity:
+                          productProvider!.getCartModelList[index]!.quantity,
+                      isCount: true,
+                    );
+                  }),
             ),
             Container(
               height: 150,

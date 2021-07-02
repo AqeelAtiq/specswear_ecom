@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:specswear_ecom/screens/forget.dart';
 import 'package:specswear_ecom/screens/homepage.dart';
 import 'package:specswear_ecom/screens/signup.dart';
 import 'package:specswear_ecom/widgets/changescreen.dart';
@@ -130,16 +131,37 @@ class _LoginState extends State<Login> {
             name: 'Login',
           ),
           //changescreen
-          ChangeScreen(
-              name: 'Sign Up',
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (ctx) => SignUp(),
-                  ),
-                );
-              },
-              whichAccount: 'I have not account')
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ChangeScreen(
+                  name: 'Sign Up',
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (ctx) => SignUp(),
+                      ),
+                    );
+                  },
+                  whichAccount: 'I have no account'),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (ctx) => Forget(),
+                    ),
+                  );
+                },
+                child: Text(
+                  "Forget Password",
+                  style: TextStyle(
+                      color: Colors.cyan,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

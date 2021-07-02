@@ -2,7 +2,7 @@ import 'package:camera_deep_ar/camera_deep_ar.dart';
 import 'package:flutter/material.dart';
 
 const apikey =
-    "ef215fa9b71cef7c233a543b77cf39f2647e4850cf9a3e67b42e11501b64f25291784343a73ed6db";
+    "bd79c7972493126948c6ac71a963d4cd6252fd3944ceeb72007f4cc9cce83ede559dd61bfe5185a2";
 
 class Vto extends StatefulWidget {
   @override
@@ -10,7 +10,7 @@ class Vto extends StatefulWidget {
 }
 
 class _VtoState extends State<Vto> {
-  CameraDeepArController cameraDeepArController;
+  CameraDeepArController? cameraDeepArController;
   int effectCount = 0;
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _VtoState extends State<Vto> {
                       backgroundColor: Colors.amber,
                       child: Icon(Icons.navigate_next),
                       onPressed: () => {
-                            cameraDeepArController.changeMask(7),
+                            cameraDeepArController?.changeMask(1),
                             // if (effectCount == 7) {effectCount = 0},
                             // effectCount++
                           })))

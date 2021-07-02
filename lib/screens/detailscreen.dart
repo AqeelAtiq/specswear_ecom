@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/cartscreen.dart';
+import 'package:specswear_ecom/screens/vto.dart';
 import 'package:specswear_ecom/widgets/mybutton.dart';
 import 'package:specswear_ecom/widgets/notification_button.dart';
 
@@ -10,11 +11,13 @@ class DetailScreen extends StatefulWidget {
       {required this.image,
       required this.name,
       required this.price,
-      this.quantity});
+      this.quantity,
+      required this.desc});
   final String image;
   final String name;
   final double? price;
   final int? quantity;
+  final String? desc;
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -61,7 +64,6 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
-        actions: [NotificationButton()],
       ),
       body: Container(
         child: ListView(
@@ -86,22 +88,32 @@ class _DetailScreenState extends State<DetailScreen> {
                             height: 15,
                           ),
                           //Building size part here
-                          _buildSizePart(),
+                          // _buildSizePart(),
                           SizedBox(
                             height: 15,
                           ),
                           //Building color part here
-                          _buildColorPart(),
+                          //   _buildColorPart(),
                           SizedBox(
                             height: 15,
                           ),
                           //build quantity part here
-                          _buildQuatityPart(),
+                          // _buildQuatityPart(),
                           SizedBox(
                             height: 15,
                           ),
                           //build  button part here
-                          _buildButtonPart()
+                          _buildButtonPart(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          MyButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (ctx) => Vto()));
+                            },
+                            name: "VTO",
+                          )
                         ],
                       ),
                     ),
@@ -132,7 +144,7 @@ class _DetailScreenState extends State<DetailScreen> {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (ctx) => CartScreen()));
         },
-        name: "Check Out",
+        name: "Add to Cart",
       ),
     );
   }
@@ -256,7 +268,7 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Wrap(
         children: [
           Text(
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+            "${widget.desc}",
             style: TextStyle(fontSize: 15),
           )
         ],

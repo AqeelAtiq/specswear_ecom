@@ -104,16 +104,16 @@ class _HomePageState extends State<HomePage> {
             _key.currentState?.openDrawer();
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
-          ),
-          NotificationButton(),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(
+        //       Icons.search,
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //NotificationButton(),
+        // ],
       ),
       body: Container(
         height: double.infinity,
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "New Archieve",
+                    "New Arrival",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
@@ -199,12 +199,17 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
+                        print("${e?.image}");
+                        print("${e?.name}");
+
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctx) => DetailScreen(
-                                image: "${e?.image}",
-                                name: "${e?.name}",
-                                price: e?.price!.toDouble()),
+                              image: "${e?.image}",
+                              name: "${e?.name}",
+                              price: e?.price!.toDouble(),
+                              desc: "${e?.desc}",
+                            ),
                           ),
                         );
                       },
@@ -223,6 +228,7 @@ class _HomePageState extends State<HomePage> {
                             image: "${e?.image}",
                             name: "${e?.name}",
                             price: e?.price!.toDouble(),
+                            desc: "${e?.desc}",
                           ),
                         ),
                       );
@@ -287,6 +293,7 @@ class _HomePageState extends State<HomePage> {
                             image: "${e?.image}",
                             name: "${e?.name}",
                             price: e?.price!.toDouble(),
+                            desc: "${e?.desc}",
                           ),
                         ),
                       );
@@ -305,6 +312,7 @@ class _HomePageState extends State<HomePage> {
                           image: "${e?.image}",
                           name: "${e?.name}",
                           price: e?.price!.toDouble(),
+                          desc: "${e?.desc}",
                         ),
                       ),
                     );
@@ -503,19 +511,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           ListTile(
-            selected: aboutColor,
-            leading: Icon(Icons.info),
-            title: Text("About"),
-            onTap: () {
-              setState(() {
-                homeColor = false;
-                cartColor = false;
-                aboutColor = true;
-                contactusColor = false;
-              });
-            },
-          ),
-          ListTile(
             selected: contactusColor,
             leading: Icon(Icons.phone),
             title: Text("Contact Us"),
@@ -534,9 +529,9 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             onTap: () {
               FirebaseAuth.instance.signOut();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => Login()),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(builder: (ctx) => Login()),
+              // );
             },
             leading: Icon(Icons.logout),
             title: Text("Log Out"),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:specswear_ecom/screens/login.dart';
+import 'package:specswear_ecom/screens/signup.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -51,7 +53,11 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         color: Color(0xff746bc9),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) => SignUp()),
+                          );
+                        },
                         child: Text("SignUp",
                             style:
                                 TextStyle(fontSize: 18, color: Colors.white)),
@@ -64,7 +70,11 @@ class WelcomeScreen extends StatelessWidget {
                         children: [
                           Text("Already have account"),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (ctx) => Login()),
+                              );
+                            },
                             child: Text(
                               "Login",
                               style: TextStyle(

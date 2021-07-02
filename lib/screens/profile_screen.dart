@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:specswear_ecom/widgets/notification_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -16,15 +18,54 @@ class ProfileScreen extends StatefulWidget {
 }
 
 ProductProvider? productProvider;
+final TextEditingController email = TextEditingController();
+final TextEditingController phoneNumber = TextEditingController();
+final TextEditingController password = TextEditingController();
+final TextEditingController userName = TextEditingController();
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // final _picker = ImagePicker();
-  // Future<void> getImage({required ImageSource source}) async {
-  //   PickedFile? image = await _picker.getImage(source: source);
-  //   final File file = File(image!.path);
-  // }
+  //validation
+//   void vaildation() async {
+//     if (userName.text.isEmpty && phoneNumber.text.isEmpty) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("All Flied Are Empty"),
+//         ),
+//       );
+//     } else if (userName.text.isEmpty) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("Name Is Empty "),
+//         ),
+//       );
+//     } else if (userName.text.length < 6) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("Name Must Be 6 "),
+//         ),
+//       );
+//     } else if (phoneNumber.text.length < 11 || phoneNumber.text.length > 11) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("Phone Number Must Be 11 "),
+//         ),
+//       );
+//     } else {
+//       userDetailUpdate();
+//     }
+//   }
+
+// //getting userid
+//   void getUserUid() {
+//     User myUser = FirebaseAuth.instance.currentUser;
+//     userUid = myUser.uid;
+//   }
+
+//
+  //
   File? _pickedImage;
   PickedFile? _image;
+  String? imageUrl;
   Future<void> getImage({required ImageSource source}) async {
     _image = await ImagePicker().getImage(source: source);
     setState(() {
@@ -34,13 +75,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _uploadImage({required File image}) async {
+  void _uploadImage({required File? image}) async {
     final user = FirebaseAuth.instance.currentUser;
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child("UserImage/${user?.uid}");
-    await FirebaseStorage.instance
-        .ref('uploads/file-to-upload.png')
-        .putFile(image);
+    // Reference storageReference =
+    //     FirebaseStorage.instance.ref().child("UserImage/${user?.uid}");
+    print(FirebaseStorage.instance
+      ..ref()
+          .child("UserImage/${user?.uid}")
+          .putFile(image!)
+          .storage
+          .ref()
+          .getDownloadURL());
     // UploadTask uploadTask = storageReference.putFile(image);
     // TaskSnapshot snapshot = await uploadTask.onComplete;
   }
@@ -112,9 +157,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         actions: [
           edit == false
-              ? NotificationButton()
+              ? Container()
               : IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final result = await FirebaseAuth.instance;
+                    FirebaseFirestore.instance
+                        .collection("User")
+                        .doc(result.currentUser?.uid)
+                        .update({
+                      "UserName": userName,
+                      "UserEmail": email,
+                      // "UserGender": isMale == true ? 'Male' : false,
+                      "PhoneNumber": phoneNumber.text,
+                    });
+                  },
                   icon: Icon(
                     Icons.check,
                     color: Colors.green,
@@ -189,6 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             edit == false
                 ? MyButton(
                     onPressed: () {
+                      _uploadImage(image: _pickedImage);
                       setState(() {
                         edit = true;
                       });
@@ -214,6 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildSingleTextField(name: '${e?.userEmail}'),
             _buildSingleTextField(name: '${e?.userPhoneNumber}'),
             _buildSingleTextField(name: '${e?.userGender}'),
+            _buildSingleTextField(name: '${e?.userAddress}'),
           ],
         );
       }).toList(),
@@ -233,6 +291,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 startText: 'Email', endText: '${e?.userEmail}'),
             _buildSingleContainer(
                 startText: 'Phone No.', endText: '${e?.userPhoneNumber}'),
+            _buildSingleContainer(
+                startText: 'Address', endText: '${e?.userAddress}'),
             _buildSingleContainer(
                 startText: 'Gender', endText: '${e?.userGender}')
           ],

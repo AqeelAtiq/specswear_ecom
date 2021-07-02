@@ -60,7 +60,6 @@ class _CartSingleProductState extends State<CartSingleProduct> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("${widget.name}"),
-                      Text("Kids"),
                       Text(
                         "Rs.${widget.price.toString()}",
                         style: TextStyle(

@@ -8,6 +8,7 @@ import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/homepage.dart';
 import 'package:specswear_ecom/screens/profile_screen.dart';
 import 'package:specswear_ecom/screens/signup.dart';
+import 'package:specswear_ecom/screens/welcomescreen.dart';
 
 void main() async {
   Provider.debugCheckInvalidValueType = null;
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
               if (snapshot.hasData) {
                 return HomePage();
               } else {
-                return SignUp(); // later replace homePage with login
+                return WelcomeScreen(); // later replace homePage with login
               }
             }),
       ),

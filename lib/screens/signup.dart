@@ -27,6 +27,7 @@ bool obserText = true;
 final TextEditingController email = TextEditingController();
 final TextEditingController phoneNumber = TextEditingController();
 final TextEditingController password = TextEditingController();
+final TextEditingController address = TextEditingController();
 final TextEditingController userName = TextEditingController();
 
 class _SignUpState extends State<SignUp> {
@@ -55,6 +56,9 @@ class _SignUpState extends State<SignUp> {
     } else if (phoneNumber.text.length < 11) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("phone number must be 11")));
+    } else if (address.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("enter your address")));
     } else {
       try {
         final result = await FirebaseAuth.instance
@@ -69,6 +73,7 @@ class _SignUpState extends State<SignUp> {
           "UserEmail": email.text,
           "UserGender": isMale == true ? 'Male' : false,
           "PhoneNumber": phoneNumber.text,
+          "UserAddress": address.text
         });
         print(result.user?.uid);
       } on PlatformException catch (e) {
@@ -177,6 +182,12 @@ class _SignUpState extends State<SignUp> {
           MyTextFormField(
             name: "Phone Number",
             controller: phoneNumber,
+          ),
+          //address
+
+          MyTextFormField(
+            name: "Address",
+            controller: address,
           ),
         ],
       ),

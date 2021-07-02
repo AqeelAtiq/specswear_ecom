@@ -31,9 +31,6 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          NotificationButton(),
-        ],
       ),
       bottomNavigationBar: Container(
         width: 100,

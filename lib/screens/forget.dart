@@ -3,13 +3,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class Forget extends StatelessWidget {
-  String email;
+  String? email;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[100],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -56,7 +61,7 @@ class Forget extends StatelessWidget {
                   onPressed: () async {
                     try {
                       FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: email);
+                          .sendPasswordResetEmail(email: email!);
                       print("Email sent");
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: const Text('Email sent. Check your Email'),

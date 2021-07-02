@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SingleProduct extends StatelessWidget {
-  SingleProduct({required this.name, required this.price, required this.image});
+  SingleProduct(
+      {required this.name,
+      required this.price,
+      required this.image,
+      this.desc});
   final String name;
   final double? price;
   final String image;
+  final String? desc;
 
   @override
   Widget build(BuildContext context) {

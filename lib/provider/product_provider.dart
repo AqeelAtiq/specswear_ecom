@@ -21,10 +21,10 @@ class ProductProvider with ChangeNotifier {
     featureSnapShot.docs.forEach(
       (element) {
         featureData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(featureData);
       },
     );
@@ -48,10 +48,10 @@ class ProductProvider with ChangeNotifier {
     homeFeatureSnapShot.docs.forEach(
       (element) {
         homeFeatureData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(homeFeatureData);
       },
     );
@@ -77,10 +77,10 @@ class ProductProvider with ChangeNotifier {
     homeArchieveSnapShot.docs.forEach(
       (element) {
         homeArchieveData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(homeArchieveData);
       },
     );
@@ -109,10 +109,10 @@ class ProductProvider with ChangeNotifier {
     archieveSnapShot.docs.forEach(
       (element) {
         archieveData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(archieveData);
       },
     );
@@ -200,6 +200,7 @@ class ProductProvider with ChangeNotifier {
               userEmail: element['UserEmail'],
               userGender: element['UserGender'],
               userName: element['UserName'],
+              userAddress: element['UserAddress'],
               userPhoneNumber: element['PhoneNumber']);
           print(userModel?.userEmail);
           newList.add(userModel);
@@ -211,5 +212,14 @@ class ProductProvider with ChangeNotifier {
 
   List<UserModel?> get getUserModelList {
     return userModelList;
+  }
+
+  void deleteCartProduct(int index) {
+    cartModelList.removeAt(index);
+    print("//");
+
+    print(index);
+    print("//");
+    notifyListeners();
   }
 }

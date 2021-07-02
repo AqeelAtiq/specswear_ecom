@@ -2,5 +2,11 @@ class Product {
   String name;
   String image;
   double? price;
-  Product({required this.image, required this.name, required this.price});
+  String desc;
+
+  Product(
+      {required this.image,
+      required this.name,
+      required this.price,
+      required this.desc});
 }

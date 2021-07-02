@@ -34,10 +34,10 @@ class CategoryProvider with ChangeNotifier {
     menSnapShot.docs.forEach(
       (element) {
         menData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(menData);
       },
     );
@@ -61,10 +61,10 @@ class CategoryProvider with ChangeNotifier {
     womenSnapShot.docs.forEach(
       (element) {
         womenData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(womenData);
       },
     );
@@ -88,10 +88,10 @@ class CategoryProvider with ChangeNotifier {
     kidsSnapShot.docs.forEach(
       (element) {
         kidsData = Product(
-          image: element['image'],
-          name: element['name'],
-          price: element['price'].toDouble(),
-        );
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
         newList.add(kidsData);
       },
     );
