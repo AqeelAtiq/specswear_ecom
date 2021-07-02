@@ -6,11 +6,9 @@ import 'package:specswear_ecom/model/usermodel.dart';
 import 'package:specswear_ecom/provider/product_provider.dart';
 import 'package:specswear_ecom/screens/homepage.dart';
 import 'package:specswear_ecom/widgets/mybutton.dart';
-import 'package:specswear_ecom/widgets/notification_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override

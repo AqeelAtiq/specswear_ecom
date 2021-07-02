@@ -216,10 +216,12 @@ class ProductProvider with ChangeNotifier {
 
   void deleteCartProduct(int index) {
     cartModelList.removeAt(index);
-    print("//");
 
-    print(index);
-    print("//");
+    notifyListeners();
+  }
+
+  void clearCheckoutProduct() {
+    checkOutModelList.clear();
     notifyListeners();
   }
 }

@@ -59,6 +59,7 @@ class _CartScreenState extends State<CartScreen> {
       body: ListView.builder(
         itemCount: productProvider!.getCartModelListLength,
         itemBuilder: (ctx, index) => CartSingleProduct(
+          index: index,
           image: productProvider!.getCartModelList[index]!.image,
           name: productProvider!.getCartModelList[index]!.name,
           price: productProvider!.getCartModelList[index]!.price!.toDouble(),

@@ -8,8 +8,10 @@ class CartSingleProduct extends StatefulWidget {
   final double? price;
   int? quantity;
   bool? isCount;
+  int index;
   CartSingleProduct(
-      {required this.image,
+      {required this.index,
+      required this.image,
       required this.name,
       required this.price,
       this.quantity,
@@ -53,13 +55,26 @@ class _CartSingleProductState extends State<CartSingleProduct> {
               ),
               Container(
                 height: 140,
-                width: 200,
+                width: 270,
                 child: ListTile(
                   title: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${widget.name}"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${widget.name}"),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  productProvider
+                                      ?.deleteCartProduct(widget.index);
+                                });
+                              },
+                              icon: Icon(Icons.close))
+                        ],
+                      ),
                       Text(
                         "Rs.${widget.price.toString()}",
                         style: TextStyle(

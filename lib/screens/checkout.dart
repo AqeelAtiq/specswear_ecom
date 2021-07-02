@@ -36,7 +36,7 @@ class _CheckOutState extends State<CheckOut> {
     discountRupess = discount / 100 * subTotal;
     total = subTotal + shipping - discountRupess;
     //
-    List<CartModel> myList;
+
     Widget _buildButton() {
       final user = FirebaseAuth.instance.currentUser;
       return Column(
@@ -64,11 +64,11 @@ class _CheckOutState extends State<CheckOut> {
                   "UserId": user!.uid,
                 });
                 setState(() {
-                  // myList.clear();
+                  productProvider?.cartModelList.clear();
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Your order is placed successfully"),
+                    content: Text("Order placed successfully"),
                   ),
                 );
               } else {
@@ -125,6 +125,7 @@ class _CheckOutState extends State<CheckOut> {
                     // print("this is length");
                     // print(productProvider!.getCartModelListLength);
                     return CartSingleProduct(
+                      index: index,
                       image: productProvider!.getCartModelList[index]!.image,
                       name: productProvider!.getCartModelList[index]!.name,
                       price: productProvider!.getCartModelList[index]!.price!
