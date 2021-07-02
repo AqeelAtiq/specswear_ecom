@@ -36,6 +36,37 @@ class ProductProvider with ChangeNotifier {
     return feature;
   }
 
+// getting archieve data here
+  List<Product?> archieve = [];
+  Product? archieveData;
+  //
+  Future<void> getArchievedata() async {
+    List<Product?> newList = [];
+    QuerySnapshot archieveSnapShot = await FirebaseFirestore.instance
+        .collection("products")
+        .doc('npOtqxmDUdXcGsgxDgsN')
+        .collection("featureproduct")
+        .get();
+
+    archieveSnapShot.docs.forEach(
+      (element) {
+        archieveData = Product(
+            image: element['image'],
+            name: element['name'],
+            price: element['price'].toDouble(),
+            desc: element['desc']);
+        newList.add(archieveData);
+      },
+    );
+    //
+    archieve = newList;
+  }
+
+  List<Product?> get getArchieveDataList {
+    return archieve;
+  }
+
+//
 //getting home feature data
   List<Product?> homeFeature = [];
   Product? homeFeatureData;
@@ -91,38 +122,6 @@ class ProductProvider with ChangeNotifier {
 
   List<Product?> get getHomeArchieveDataList {
     return homeArchieve;
-  }
-
-//
-  //getting archive data
-  List<Product?> archieve = [];
-  Product? archieveData;
-  //
-  Future<void> getArchievedata() async {
-    List<Product?> newList = [];
-    QuerySnapshot archieveSnapShot = await FirebaseFirestore.instance
-        .collection("products")
-        .doc('npOtqxmDUdXcGsgxDgsN')
-        .collection("newarchieve")
-        .get();
-
-    archieveSnapShot.docs.forEach(
-      (element) {
-        archieveData = Product(
-            image: element['image'],
-            name: element['name'],
-            price: element['price'].toDouble(),
-            desc: element['desc']);
-        newList.add(archieveData);
-      },
-    );
-    //
-    archieve = newList;
-    notifyListeners();
-  }
-
-  List<Product?> get getArchieveDataList {
-    return archieve;
   }
 
   //Playing with Cart
